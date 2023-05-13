@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def draw_grafics():
+def draw_graphics():
     if left_limit.get() == '' or right_limit.get() == '' or formula_input.get() == '':
         messagebox.showinfo("ОШИБКА", "Заполните все поля")
     else:
@@ -36,8 +36,9 @@ def draw_grafics():
             plt.show()
 
 
-def draw_grafics_2tab():
-    if t_left_limit.get() == '' or t_right_limit.get() == '' or x_formula_input.get() == '' or y_formula_input.get() == '':
+def draw_graphics_2tab():
+    if (t_left_limit.get() == '' or t_right_limit.get() == ''
+            or x_formula_input.get() == '' or y_formula_input.get() == ''):
         messagebox.showinfo("ОШИБКА", "Заполните все поля")
     else:
         # Принимаем строку с поля ввода
@@ -107,7 +108,7 @@ right_limit = tk.Entry(tab1)
 right_limit.grid(column=1, row=2, padx=5, pady=5)
 
 # Кнопка вызова функции
-cal_btn = tk.Button(tab1, text='Построить график', command=draw_grafics)
+cal_btn = tk.Button(tab1, text='Построить график', command=draw_graphics)
 cal_btn.grid(column=1, row=3, padx=5, pady=5)
 
 # Создание второй вкладки
@@ -145,7 +146,7 @@ t_right_limit = tk.Entry(tab2)
 t_right_limit.grid(column=1, row=3, padx=5, pady=5)
 
 # Кнопка вызова функции
-t_cal_btn = tk.Button(tab2, text='Построить график', command=draw_grafics_2tab)
+t_cal_btn = tk.Button(tab2, text='Построить график', command=draw_graphics_2tab)
 t_cal_btn.grid(column=1, row=4, padx=5, pady=5)
 
 # Запуск основного цикла
