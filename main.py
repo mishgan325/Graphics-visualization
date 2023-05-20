@@ -33,6 +33,7 @@ def draw_graphics():
                 plt.xlabel('X')
                 plt.ylabel('Y')
                 plt.title(f"График y = ${sympy.latex(expr)}$")
+                plt.axis('equal')
                 plt.grid()
                 plt.show()
         except Exception:
@@ -64,13 +65,14 @@ def draw_graphics_2tab():
             else:
                 t_vals = np.linspace(float(t_left_limit.get()), float(t_right_limit.get()), 100000)
                 x_vals = f_x(t_vals)
-                y_vals = f_y(x_vals)
+                y_vals = f_y(t_vals)
 
                 # Отображаем график
                 plt.plot(x_vals, y_vals)
                 plt.xlabel('X')
                 plt.ylabel('Y')
                 plt.title(f"График x(t) = ${sympy.latex(x_expr)}$, y(t) = ${sympy.latex(y_expr)}$")
+                plt.axis('equal')
                 plt.grid()
                 plt.show()
         except Exception:
