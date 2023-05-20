@@ -10,30 +10,33 @@ def draw_graphics():
     if left_limit.get() == '' or right_limit.get() == '' or formula_input.get() == '':
         messagebox.showinfo("ОШИБКА", "Заполните все поля")
     else:
-        # Принимаем строку с поля ввода
-        expr_str = str(formula_input.get())
-        # Преобразуем строку в символьное выражение
-        expr = sympy.sympify(expr_str)
-        # Получаем список переменных в выражении
-        f_vars = expr.free_symbols
-        f = sympy.lambdify('x', expr)
+        try:
+            # Принимаем строку с поля ввода
+            expr_str = str(formula_input.get())
+            # Преобразуем строку в символьное выражение
+            expr = sympy.sympify(expr_str)
+            # Получаем список переменных в выражении
+            f_vars = expr.free_symbols
+            f = sympy.lambdify('x', expr)
 
-        # Если в выражении нет переменной x, сообщаем об ошибке
-        if sympy.core.symbol.Symbol('x') not in f_vars:
-            messagebox.showinfo("ОШИБКА", "В функции нет перемнной x")
-        else:
-            x_vals = np.linspace(float(left_limit.get()), float(right_limit.get()), 100000)
-            y_vals = f(x_vals)
+            # Если в выражении нет переменной x, сообщаем об ошибке
+            if sympy.core.symbol.Symbol('x') not in f_vars:
+                messagebox.showinfo("ОШИБКА", "В функции нет переменной x")
+            elif len(f_vars) > 1:
+                messagebox.showinfo("ОШИБКА", "Больше одной переменной")
+            else:
+                x_vals = np.linspace(float(left_limit.get()), float(right_limit.get()), 100000)
+                y_vals = f(x_vals)
 
-            # Отображаем график
-            plt.plot(x_vals, y_vals)
-            plt.xlabel('X')
-            plt.ylabel('Y')
-            plt.title(expr_str)
-            # plt.title(r'$y = \sqrt{x}$')
-            # print(fr'${sympy.latex(expr_str)}$')
-            plt.grid()
-            plt.show()
+                # Отображаем график
+                plt.plot(x_vals, y_vals)
+                plt.xlabel('X')
+                plt.ylabel('Y')
+                plt.title(f"График y = ${sympy.latex(expr)}$")
+                plt.grid()
+                plt.show()
+        except Exception:
+            messagebox.showinfo("ОШИБКА", "Проверьте правильность ввода")
 
 
 def draw_graphics_2tab():
@@ -41,40 +44,42 @@ def draw_graphics_2tab():
             or x_formula_input.get() == '' or y_formula_input.get() == ''):
         messagebox.showinfo("ОШИБКА", "Заполните все поля")
     else:
-        # Принимаем строку с поля ввода
-        x_expr_str = str(x_formula_input.get())
-        y_expr_str = str(y_formula_input.get())
-        # Преобразуем строку в символьное выражение
-        x_expr = sympy.sympify(x_expr_str)
-        y_expr = sympy.sympify(y_expr_str)
-        # Получаем список переменных в выражении
-        vars_x = x_expr.free_symbols
-        vars_y = y_expr.free_symbols
-        f_x = sympy.lambdify('t', x_expr)
-        f_y = sympy.lambdify('t', y_expr)
-        # Если в выражении нет переменной x, сообщаем об ошибке
-        if sympy.core.symbol.Symbol('t') not in vars_x and sympy.core.symbol.Symbol('t') not in vars_y:
-            messagebox.showinfo("ОШИБКА", "В функции нет переменной t")
-        else:
-            t_vals = np.linspace(float(t_left_limit.get()), float(t_right_limit.get()), 100000)
-            x_vals = f_x(t_vals)
-            y_vals = f_y(x_vals)
+        try:
+            # Принимаем строку с поля ввода
+            x_expr_str = str(x_formula_input.get())
+            y_expr_str = str(y_formula_input.get())
+            # Преобразуем строку в символьное выражение
+            x_expr = sympy.sympify(x_expr_str)
+            y_expr = sympy.sympify(y_expr_str)
+            # Получаем список переменных в выражении
+            vars_x = x_expr.free_symbols
+            vars_y = y_expr.free_symbols
+            f_x = sympy.lambdify('t', x_expr)
+            f_y = sympy.lambdify('t', y_expr)
+            # Если в выражении нет переменной x, сообщаем об ошибке
+            if sympy.core.symbol.Symbol('t') not in vars_x and sympy.core.symbol.Symbol('t') not in vars_y:
+                messagebox.showinfo("ОШИБКА", "В функции нет переменной t")
+            elif len(vars_x) > 1 or len(vars_y) > 1:
+                messagebox.showinfo("ОШИБКА", "Больше одной переменной")
+            else:
+                t_vals = np.linspace(float(t_left_limit.get()), float(t_right_limit.get()), 100000)
+                x_vals = f_x(t_vals)
+                y_vals = f_y(x_vals)
 
-            # Отображаем график
-            plt.plot(x_vals, y_vals)
-            plt.xlabel('X')
-            plt.ylabel('Y')
-            # plt.title()
-            # plt.title(r'$y = \sqrt{x}$')
-            # print(fr'${sympy.latex(expr_str)}$')
-            plt.grid()
-            plt.show()
+                # Отображаем график
+                plt.plot(x_vals, y_vals)
+                plt.xlabel('X')
+                plt.ylabel('Y')
+                plt.title(f"График x(t) = ${sympy.latex(x_expr)}$, y(t) = ${sympy.latex(y_expr)}$")
+                plt.grid()
+                plt.show()
+        except Exception:
+            messagebox.showinfo("ОШИБКА", "Проверьте правильность ввода")
 
 
 # Создание корневого окна
 window = tk.Tk()
 window.title('Построение графиков')
-# window.geometry('400x300')
 
 # Создание виджета Notebook
 notebook = ttk.Notebook(window)
@@ -151,21 +156,3 @@ t_cal_btn.grid(column=1, row=4, padx=5, pady=5)
 
 # Запуск основного цикла
 window.mainloop()
-
-# try:
-#     # Принимаем строку с поля ввода
-#     expr_str = str(formula_input.get())
-#     # Преобразуем строку в символьное выражение
-#     expr = sympy.sympify(expr_str)
-#     # Получаем список переменных в выражении
-#     vars = expr.free_symbols
-#     f = sympy.lambdify('x', expr)
-# except KeyError:
-#     print("Деление на ноль!")
-#     res = messagebox.askquestion('ОШИБКА!', 'Деление на ноль!')
-#     expr_str = str(formula_input.get())
-#     # Преобразуем строку в символьное выражение
-#     expr = sympy.sympify(expr_str)
-#     # Получаем список переменных в выражении
-#     vars = expr.free_symbols
-#     f = sympy.lambdify('x', expr)
